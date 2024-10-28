@@ -17,6 +17,10 @@ $(document).ready(function(){
         e.preventDefault()
         viewProducts()
     })
+    $('#accounts-link').on('click', function(e){
+        e.preventDefault()
+        viewAccounts()
+    })
 
     let url = window.location.href;
     if (url.endsWith('dashboard')){
@@ -191,5 +195,38 @@ $(document).ready(function(){
                 });
             }
         });
+    }
+    function viewAccounts(){
+        $.ajax({
+            type: 'GET',
+            url: '../account/view-accounts.php',
+            dataType: 'html',
+            success: function(response){
+                $('.content-page').html(response)
+
+                var table = $('#table-accounts').DataTable({
+                    dom: 'rtp',
+                    pageLength: 10,
+                    ordering: false,
+                });
+
+                // Bind custom input to DataTable search
+                $('#custom-search').on('keyup', function() {
+                    table.search(this.value).draw()
+                });
+
+                $('#category-filter').on('change', function() {
+                    if(this.value !== 'choose'){
+                        table.column(3).search(this.value).draw()
+                    }
+                });
+
+                $('#add-product').on('click', function(e){
+                    e.preventDefault()
+                    addProduct()
+                })
+
+            }
+        })
     }
 });

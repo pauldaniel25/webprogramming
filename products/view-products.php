@@ -1,3 +1,14 @@
+<?php
+
+if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'){
+ ?>
+<div style="display: flex; justify-content: center;">
+    <img src="https://ih1.redbubble.net/image.2517271689.2840/raf,360x360,075,t,fafafa:ca443f4786.jpg" alt="Shrek">
+</div>
+ <?php
+    exit;
+}
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
