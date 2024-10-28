@@ -82,7 +82,7 @@ class Account{
         return $data;
     }
     function fetchRole(){
-        $sql = "SELECT role FROM account order by role ASC;";
+        $sql = "SELECT id, role FROM account ORDER BY id ASC;";
         $query = $this->db->connect()->prepare($sql);
         $data = null;
          if ($query->execute()) {

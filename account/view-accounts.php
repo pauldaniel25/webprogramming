@@ -55,6 +55,9 @@ if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQU
                                 </select>
                             </div>
                         </div>
+                        <div class="page-title-right d-flex align-items-center"> 
+                            <a id="add-staff" href="#" class="btn btn-primary brand-bg-color">Add Account</a>
+                        </div>
                     </div>
                     
                     <div class="table-responsive">

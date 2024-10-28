@@ -27,6 +27,8 @@ $(document).ready(function(){
         $('#dashboard-link').trigger('click')
     }else if (url.endsWith('products')){
         $('#products-link').trigger('click')
+    }else if (url.endsWith('accounts')){
+        $('#accounts-link').trigger('click')
     }else{
         $('#dashboard-link').trigger('click')
     }
@@ -221,12 +223,104 @@ $(document).ready(function(){
                     }
                 });
 
-                $('#add-product').on('click', function(e){
+                $('#add-staff').on('click', function(e){
                     e.preventDefault()
-                    addProduct()
+                    addStaff()
                 })
 
             }
         })
     }
+    function addStaff(){
+        $.ajax({
+            type: 'GET',
+            url: '../account/add-account.html',
+            dataType: 'html',
+            success: function(view){
+                $('.modal-container').html(view)
+                $('#modal-add-account').modal('show')
+
+                fetchAccount()
+
+                $('#form-add-account').on('submit', function(e){
+                    e.preventDefault()
+                    saveAccount()
+                })
+            }
+        })
+    }
+    function saveAccount(){  
+        let form = new FormData($('#form-add-account')[0])
+        console.log('Form Data:', form); // Log the FormData object to check its contents
+        $.ajax({
+            type: 'POST',
+            url: '../account/add-account.php',
+            data: form,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status === 'error') {
+                    if (response.first_nameErr) {
+                        $('#first_name').addClass('is-invalid');
+                        $('#first_name').next('.invalid-feedback').text(response.first_nameErr).show();
+                    }else{
+                        $('#first_name').removeClass('is-invalid');
+                    }
+                    if (response.last_nameErr) {
+                        $('#last_name').addClass('is-invalid');
+                        $('#last_name').next('.invalid-feedback').text(response.last_nameErr).show();
+                    }else{
+                        $('#last_name').removeClass('is-invalid');
+                    }
+                    if (response.usernameErr) {
+                        $('#username').addClass('is-invalid');
+                        $('#username').next('.invalid-feedback').text(response.usernameErr).show();
+                    }else{
+                        $('#username').removeClass('is-invalid');
+                    }
+                    if (response.roleErr) {
+                        $('#role').addClass('is-invalid');
+                        $('#role').next('.invalid-feedback').text(response.roleErr).show();
+                    }else{
+                        $('#role').removeClass('is-invalid');
+                    }
+                    if (response.passwordErr) {
+                        $('#password').addClass('is-invalid');
+                        $('#password').next('.invalid-feedback').text(response.passwordErr).show();
+                    }else{
+                        $('#password').removeClass('is-invalid');
+                    }
+                } else if (response.status === 'success') {
+                    $('#modal-add-account').modal('hide');
+                    $('#form-add-account')[0].reset();
+                    viewAccounts()
+                }
+                
+            }
+        });
+        
+    }
+    function fetchAccount(){
+        $.ajax({
+            url: '../account/fetch-roles.php', // URL to the PHP script that returns the categories
+            type: 'GET',
+            dataType: 'json', // Expect JSON response
+            success: function(data) {
+                // Clear the existing options (if any) and add a default "Select" option
+                $('#Role').empty().append('<option value="">--Select--</option>');
+                
+                // Iterate through the data (categories) and append each one to the select dropdown
+                $.each(data, function(index, Role) {
+                    $('#Role').append(
+                        $('<option>', {
+                            value: Role.id, // The value attribute
+                            text: Role.role // The displayed text
+                        })
+                    );
+                });
+            }
+        });
+    }
+   
 });
