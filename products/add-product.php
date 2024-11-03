@@ -19,6 +19,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $price = clean_input($_POST['price']);
     $image = $_FILES['product_image']['name'];
     $imageTemp = $_FILES['product_image']['tmp_name'];
+    $imageSize = $_FILES['product_image']['size']; //check for the image sizeee
 
     if(empty($code)){
         $codeErr = 'Product Code is required.';
@@ -47,6 +48,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $imageErr = 'Product image is required.';
     }else if(!in_array($imageFileType, $allowedType)){
         $imageErr = 'Accepted files are jpg, jpeg, and png only.';
+    }else if ($imageSize > 5 * 1024 * 1024) { // limit to only 5mb
+        $imageErr = 'File size must not exceed 100 KB.';
     }
 
     // If there are validation errors, return them as JSON
